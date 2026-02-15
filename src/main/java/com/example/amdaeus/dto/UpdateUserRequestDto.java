@@ -1,0 +1,11 @@
+package com.example.amdaeus.dto;
+
+import com.example.amdaeus.entity.Role;
+import java.util.Set;
+
+public record UpdateUserRequestDto(
+        String firstName,
+        String lastName,
+        String userName,
+        Set<Role> userType
+) {}
