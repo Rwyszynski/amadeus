@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Szczegóły użytkownika</title>
+</head>
+<body>
+<h1>Szczegóły użytkownika</h1>
+
+<p>ID: <span th:text="${user.id}"></span></p>
+<p>Imię: <span th:text="${user.firstName}"></span></p>
+<p>Nazwisko: <span th:text="${user.lastName}"></span></p>
+<p>Email: <span th:text="${user.emailAddress}">user email</span></p>
+<span th:each="role : ${user.userType}" th:text="${role}"></span>
+
+
+<a th:href="@{/admin/users}">Powrót do listy użytkowników</a>
+</body>
+</html>

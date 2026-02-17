@@ -3,6 +3,7 @@ package com.example.amdaeus.service;
 import com.example.amdaeus.dto.ThresholdDTO;
 import com.example.amdaeus.dto.ThresholdUpdateRequestDTO;
 import com.example.amdaeus.entity.Threshold;
+import com.example.amdaeus.entity.errors.ThresholdNotFoundExeption;
 import com.example.amdaeus.repository.ThresholdRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,7 @@ public class ThresholdService {
 
     public ThresholdDTO getThresholdValue() {
         Threshold threshold = repository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Threshold not found"));
-
+                .orElseThrow(() -> new ThresholdNotFoundExeption("Threshold not found"));
         return new ThresholdDTO(threshold.getAmount());
     }
 }

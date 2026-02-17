@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Threshold</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<h2>Current Threshold</h2>
+<p>
+    <strong id="thresholdValue">Loading...</strong>
+</p>
+
+<hr>
+
+<h3>Update Threshold</h3>
+
+<input type="number"
+       id="newThreshold"
+       step="0.01"
+       placeholder="Enter new threshold">
+
+<button id="updateBtn">Update</button>
+
+<p id="statusMsg"></p>
+
+<script>
+    async function fetchThreshold() {
+        const response = await fetch('/v1/threshold');
+        const data = await response.json();
+        document.getElementById('thresholdValue').innerText = data.amount;
+    }
+
+    async function updateThreshold() {
+        const amount = document.getElementById('newThreshold').value;
+
+        if (!amount) {
+            document.getElementById('statusMsg').innerText = "Amount required";
+            return;
+        }
+
+        const response = await fetch('/v1/threshold', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                amount: amount
+            })
+        });
+
+        if (!response.ok) {
+            document.getElementById('statusMsg').innerText = "Update failed";
+            return;
+        }
+
+        const updated = await response.json();
+        document.getElementById('thresholdValue').innerText = updated.amount;
+        document.getElementById('statusMsg').innerText = "Threshold updated";
+        document.getElementById('newThreshold').value = "";
+    }
+
+    fetchThreshold();
+
+    document.getElementById('updateBtn')
+        .addEventListener('click', updateThreshold);
+</script>
+
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>

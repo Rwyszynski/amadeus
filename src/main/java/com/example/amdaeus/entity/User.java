@@ -3,7 +3,6 @@ package com.example.amdaeus.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
@@ -67,5 +66,9 @@ public class User {
 
     public Set<Role> getUserType() {
         return userType;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 }

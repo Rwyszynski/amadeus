@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Business Trip Requests</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        #loading {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header fragment -->
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<h2>All Business Trip Requests</h2>
+
+<p id="loading">Loading...</p>
+
+<table id="btrTable" style="display:none;">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Dates</th>
+        <th>Amount</th>
+        <th>Comments</th>
+    </tr>
+    </thead>
+    <tbody id="btrBody">
+    <!-- Rows will be populated by JS -->
+    </tbody>
+</table>
+
+<script>
+    async function loadBTRs() {
+        const loading = document.getElementById('loading');
+        const table = document.getElementById('btrTable');
+        const tbody = document.getElementById('btrBody');
+
+        try {
+            const response = await fetch('/v1/btr/admin', {
+                method: 'GET',
+                credentials: 'include' // ważne: pozwala przesłać ciasteczka sesji formLogin
+            });
+
+            if (!response.ok) {
+                throw new Error('HTTP error ' + response.status);
+            }
+
+            const btrs = await response.json();
+            loading.style.display = 'none';
+            table.style.display = 'table';
+
+            // Wyczyść tbody
+            tbody.innerHTML = '';
+
+            btrs.forEach(btr => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${btr.btrId}</td>
+                    <td>${btr.title}</td>
+                    <td>${btr.userName}</td>
+                    <td>${btr.status}</td>
+                    <td>${btr.startLocation}</td>
+                    <td>${btr.destination}</td>
+                    <td>${btr.startDate} → ${btr.endDate}</td>
+                    <td>${btr.anticipatedExpenseAmount}</td>
+                    <td>${btr.comments ?? ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+        } catch (err) {
+            console.error(err);
+            loading.innerText = "Failed to load BTRs";
+        }
+    }
+
+    loadBTRs();
+</script>
+
+<!-- Footer fragment -->
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>

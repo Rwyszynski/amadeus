@@ -13,8 +13,8 @@ public class UserMapper {
         if (user == null) {
             return null;
         }
-
         return new UserDto(
+                user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmailAddress(),

@@ -5,6 +5,7 @@ import com.example.amdaeus.dto.UpdateUserRequestDto;
 import com.example.amdaeus.dto.UserDto;
 import com.example.amdaeus.entity.Role;
 import com.example.amdaeus.entity.User;
+import com.example.amdaeus.entity.errors.UserNotFoundExeption;
 import com.example.amdaeus.mappers.UserMapper;
 import com.example.amdaeus.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -32,34 +32,35 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserRequestDto request) {
-        UserDto created = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id)
+                .orElseThrow(() -> new UserNotFoundExeption("User not found with id: " + id));
+        return ResponseEntity.ok(UserMapper.mapToUserDto(user));
     }
 
     @PutMapping("/{id}/roles")
-    public ResponseEntity<UserDto> updateRoles(@PathVariable("id") Long id, @RequestBody Set<Role> roles) {
-
-        User user = userService.updateRoles(id, roles);
+    public ResponseEntity<UserDto> addRoles(@PathVariable("id") Long id,
+                                            @RequestBody Set<Role> roles) {
+        User user = userService.addRoles(id, roles);
         return ResponseEntity.ok(UserMapper.mapToUserDto(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequestDto request
-    ) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequestDto request) {
         UserDto updated = userService.updateUserData(
-                userId,
+                id,
                 request.firstName(),
                 request.lastName(),
                 request.userName(),
                 request.userType()
         );
         return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserRequestDto dto) {
+        UserDto created = userService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 }
 

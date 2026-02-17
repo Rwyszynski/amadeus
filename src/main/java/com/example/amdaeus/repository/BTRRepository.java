@@ -1,5 +1,6 @@
 package com.example.amdaeus.repository;
 
+import com.example.amdaeus.dto.BussinessTripRequest;
 import com.example.amdaeus.entity.BTRStatus;
 import com.example.amdaeus.entity.BussinessTripRequests;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,6 @@ public interface BTRRepository extends CrudRepository<BussinessTripRequests, Lon
     List<BussinessTripRequests> findByUserName(@Param("username") String username);
 
     List<BussinessTripRequests> findByStatus(BTRStatus status);
+
+    List<BussinessTripRequest> findAllByStatus(BTRStatus status);
 }

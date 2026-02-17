@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<h2>User Dashboard</h2>
+<p>Welcome, <span th:text="${username}">User</span>!</p>
+<a th:href="@{/btrs/new}">Create new BTR request</a>
+
+<h3>Your BTR requests:</h3>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Destination</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="btr : ${btrs}">
+        <td th:text="${btr.id}"></td>
+        <td th:text="${btr.status}"></td>
+        <td th:text="${btr.destination}"></td>
+        <td>
+            <a th:href="@{'/btrs/' + ${btr.id}}">View</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>

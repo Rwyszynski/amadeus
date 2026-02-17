@@ -9,6 +9,7 @@ public class BTRMapper {
 
     public BussinessTripRequests toEntity(BussinessTripRequestsDTO dto) {
         BussinessTripRequests entity = new BussinessTripRequests();
+        entity.setBTRid(Math.toIntExact(dto.btrId()));
         entity.setTitle(dto.title());
         entity.setTripReason(dto.tripReason());
         entity.setStartDate(dto.startDate());
@@ -17,11 +18,13 @@ public class BTRMapper {
         entity.setDestination(dto.destination());
         entity.setAnticipatedExpenseAmount(dto.anticipatedExpenseAmount());
         entity.setComments(dto.comments());
+
         return entity;
     }
 
     public BussinessTripRequestsDTO toDTO(BussinessTripRequests entity) {
         return new BussinessTripRequestsDTO(
+                (long) entity.getBTRid(),
                 entity.getTitle(),
                 entity.getTripReason(),
                 entity.getStartDate(),
@@ -29,7 +32,9 @@ public class BTRMapper {
                 entity.getStartLocation(),
                 entity.getDestination(),
                 entity.getAnticipatedExpenseAmount(),
-                entity.getComments()
+                entity.getComments(),
+                entity.getUser().getUserName(),
+                entity.getStatus()
         );
     }
 }

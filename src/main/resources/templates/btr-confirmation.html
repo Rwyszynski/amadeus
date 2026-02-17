@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BTR Confirmation</title>
+</head>
+<body>
+<h1>Form submitted!</h1>
+<p>Title: <span th:text="${btr.title}">Title here</span></p>
+<p>Reason: <span th:text="${btr.tripReason}">Reason here</span></p>
+<p>Start date: <span th:text="${btr.startDate}">Start date</span></p>
+<p>End date: <span th:text="${btr.endDate}">End date</span></p>
+<p>Destination: <span th:text="${btr.destination}">Destination</span></p>
+<p>Expense: <span th:text="${btr.anticipatedExpenseAmount}">Amount</span></p>
+<p>Comments: <span th:text="${btr.comments}">Comments</span></p>
+</body>
+</html>

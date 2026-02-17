@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -17,7 +16,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "TwojSuperTajnySekretnyKluczJWTMusiszMiecCoNajmniej256Bitow";
+    private static final String SECRET_KEY = "MYEXTREMELYSECRETKEYFORJWTGENERATIONWHICHSHOULDNOTBESHARED";
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
@@ -28,7 +27,7 @@ public class JwtService {
                 .setSubject(user.getEmailAddress())
                 .claim("roles", user.getUserType().stream().map(Enum::name).collect(Collectors.toSet()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 godzina
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -55,7 +54,6 @@ public class JwtService {
         return Set.of();
     }
 
-    // <-- Dodajemy brakującą metodę
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

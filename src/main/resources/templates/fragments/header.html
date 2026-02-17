@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title} :: title">Amdaeus</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/" th:href="@{/}">Home</a>
+        <a href="/btrs" th:href="@{/btrs}">BTRs</a>
+        <a href="/logout" th:href="@{/logout}">Logout</a>
+    </nav>
+</header>
+<main>

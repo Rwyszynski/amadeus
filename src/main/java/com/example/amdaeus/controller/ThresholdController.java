@@ -20,14 +20,12 @@ public class ThresholdController {
     }
 
     @GetMapping
-    ResponseEntity<ThresholdDTO> getTreshold() {
+    public ResponseEntity<ThresholdDTO> getThreshold() {
         return ResponseEntity.ok(thresholdMapper.mapToThresholdDTO(thresholdService.getThresholdValue()));
     }
 
     @PutMapping
-    public ResponseEntity<ThresholdDTO> updateThreshold(
-            @RequestBody ThresholdUpdateRequestDTO request) {
-
+    public ResponseEntity<ThresholdDTO> updateThreshold(@RequestBody ThresholdUpdateRequestDTO request) {
         ThresholdDTO updated = thresholdService.updateThresholdValue(request);
         return ResponseEntity.ok(updated);
     }

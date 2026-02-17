@@ -6,8 +6,10 @@ import com.example.amdaeus.entity.Role;
 import com.example.amdaeus.entity.User;
 import com.example.amdaeus.mappers.UserMapper;
 import com.example.amdaeus.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -29,22 +31,6 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public UserDto createUser(CreateUserRequestDto request) {
-
-        User user = new User(
-                request.firstName(),
-                request.lastName(),
-                request.emailAddress(),
-                request.userName(),
-                request.password(),
-                request.userType()
-        );
-
-        userRepository.save(user);
-
-        return UserMapper.mapToUserDto(user);
-    }
-
     public User updateRoles(Long id, Set<Role> roles) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -59,6 +45,45 @@ public class UserService {
         user.setLastName(lastName);
         user.setUserName(userName);
         user.setUserType(userType);
+        userRepository.save(user);
+        return UserMapper.mapToUserDto(user);
+    }
+
+    public Optional<User> findByUserName(String username) {
+        return userRepository.findByUserName(username);
+    }
+
+    public User getCurrentAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("No authenticated user found");
+        }
+        String username = authentication.getName();
+        return userRepository.findByEmailAddress(username)
+                .orElseThrow(() -> new RuntimeException("Did not found user " + username));
+    }
+
+    public User addRoles(Long id, Set<Role> newRoles) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getUserType() == null) {
+            user.setUserType(new HashSet<>());
+        }
+        user.getUserType().addAll(newRoles);
+        return userRepository.save(user);
+    }
+
+    public UserDto createUser(CreateUserRequestDto dto) {
+        User user = new User(
+                dto.firstName(),
+                dto.lastName(),
+                dto.emailAddress(),
+                dto.userName(),
+                dto.password(),
+                dto.userType()
+        );
         userRepository.save(user);
         return UserMapper.mapToUserDto(user);
     }

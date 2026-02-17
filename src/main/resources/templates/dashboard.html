@@ -1,0 +1,21 @@
+<tbody id="btrTableBody"></tbody>
+
+<script>
+    fetch('/api/approver/btrs')
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById('btrTableBody');
+
+            data.forEach(btr => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${btr.title}</td>
+                <td>${btr.user.userName}</td>
+                <td>${btr.startDate}</td>
+                <td>${btr.endDate}</td>
+                <td>${btr.status}</td>
+            `;
+                tbody.appendChild(row);
+            });
+        });
+</script>

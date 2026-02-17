@@ -26,10 +26,11 @@ public class BussinessTripRequests {
     private BigDecimal anticipatedExpenseAmount;
     private String comments;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)
     private BTRStatus status = BTRStatus.PENDING;
+
 }
